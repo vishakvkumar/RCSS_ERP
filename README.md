@@ -18,7 +18,7 @@ The leadership logins use the names and titles listed on the college's
 | Dean | Dr. Bindiya M. Varghese | Dean, Computer Science |
 | HR | Dr. Manoj Mathew | Associate Dean, Human Resource Development |
 | IQAC Coordinator | Prof. Binoy Joseph | Associate Director; IQAC Coordinator |
-| Research Pillar Head | Dr. Alphonsa Vijaya Joseph | Director, RRDC; Head, Biosciences |
+| Research Pillar Head | Dr. Sabeen Govind | Research Coordinator, Hill Campus |
 | Admission Pillar Head | Dr. Veeva Mathew | Director, Admissions |
 | System Administrator | Dr. Shiju Thomas M.Y. | Convenor, IT Committee |
 

@@ -40,7 +40,7 @@ export const campuses: Campus[] = [
 export const schools: School[] = [
   { id: 'sss', name: 'School of Social Sciences' },
   { id: 'scm', name: 'School of Commerce and Management' },
-  { id: 'sci', name: 'School of Sciences and Computing' },
+  { id: 'sci', name: 'School of Computing and Information' },
 ]
 
 export const departments: Department[] = [
@@ -52,7 +52,6 @@ export const departments: Department[] = [
   { id: 'cs', name: 'Computer Science', schoolId: 'sci', campusId: 'hill' },
   { id: 'lis', name: 'Library and Information Science', schoolId: 'sci', campusId: 'hill' },
   { id: 'stat', name: 'Statistics', schoolId: 'sci', campusId: 'hill' },
-  { id: 'bio', name: 'Biosciences', schoolId: 'sci', campusId: 'hill' },
   { id: 'admin', name: 'Administration', schoolId: 'sss', campusId: 'hill' },
 ]
 
@@ -79,7 +78,7 @@ const people: [string, string, string, Employee['category'], string?, boolean?][
   ['Dr. Manoj Mathew', 'admin', 'Associate Dean, Human Resource Development', 'Teaching', 'hr', true],
   ['Mr. Joseph Mathew', 'admin', 'Accountant', 'Non-teaching', 'finance'],
   ['Prof. Binoy Joseph', 'admin', 'Associate Director; IQAC Coordinator', 'Teaching', 'iqac', true],
-  ['Dr. Alphonsa Vijaya Joseph', 'bio', 'Director, RRDC; Head, Biosciences', 'Teaching', 'research', true],
+  ['Dr. Sabeen Govind', 'admin', 'Research Coordinator, Hill Campus', 'Teaching', 'research', true],
   ['Dr. Veeva Mathew', 'admin', 'Director, Admissions', 'Teaching', 'admission', true],
   ['Mr. Vivek Raj', 'cs', 'Assistant Professor', 'Teaching', 'employee'],
   ['Dr. Shiju Thomas M.Y.', 'admin', 'Convenor, IT Committee', 'Teaching', 'admin', true],

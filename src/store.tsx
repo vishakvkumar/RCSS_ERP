@@ -35,7 +35,7 @@ interface State {
   roleHolders: Record<RoleId, string>
 }
 
-const KEY = 'rcss-epde-demo-v2'
+const KEY = 'rcss-epde-demo-v3'
 
 function initial(): State {
   return {
