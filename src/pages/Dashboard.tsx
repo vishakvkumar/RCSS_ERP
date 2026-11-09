@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useStore, inr, fmtDate, monthName } from '../store'
 import { roleTitle, scopeEmployees } from '../data/roles'
-import { leaveBalancesFor, punchesFor, holidays, naacCriteria } from '../data/mock'
+import { leaveBalancesFor, punchesFor, holidays, naacCriteria, schools } from '../data/mock'
 import { completeness, deptReadiness, queueFor, todaySummary } from '../lib'
 import { Badge, Bar, Card, Notice, PageHead, Stat } from '../components/ui'
 
@@ -12,7 +12,7 @@ function Greeting() {
   return (
     <PageHead
       eyebrow={roleTitle(s.role!)}
-      title={`${g}, ${me!.name.split(' ').slice(0, 2).join(' ')}`}
+      title={`${g}, ${me!.name}`}
       sub={new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
     />
   )
@@ -128,7 +128,7 @@ function DeanDash() {
   return (
     <>
       <Notice>
-        You are seeing the {deptIds.length} departments in your school ({school === 'scm' ? 'Commerce and Management' : school}). Salary and personal documents are not shown to this role.
+        You are seeing the {deptIds.length} departments in the {schools.find((x) => x.id === school)?.name ?? 'school'}. Salary and personal documents are not shown to this role.
       </Notice>
       <div className="grid g4">
         <Stat label="School staff" value={scoped.length} />
@@ -170,7 +170,7 @@ function HodDash() {
               </tr>
             </thead>
             <tbody>
-              {scoped.map((e) => {
+              {scoped.filter((e) => !e.real).map((e) => {
                 const d = punchesFor(e.id).at(-1)!
                 return (
                   <tr key={e.id}>
@@ -260,7 +260,7 @@ function FinanceDash() {
 
 function IqacDash() {
   const { s } = useStore()
-  const teaching = s.employees.filter((e) => e.category === 'Teaching')
+  const teaching = s.employees.filter((e) => e.category === 'Teaching' && !e.real)
   const incomplete = teaching.filter((e) => completeness(e, s.publications) < 100)
   return (
     <>

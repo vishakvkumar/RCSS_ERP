@@ -35,7 +35,7 @@ interface State {
   roleHolders: Record<RoleId, string>
 }
 
-const KEY = 'rcss-epde-demo-v1'
+const KEY = 'rcss-epde-demo-v2'
 
 function initial(): State {
   return {
@@ -53,9 +53,9 @@ function initial(): State {
     candidates: mock.initialCandidates,
     duties: mock.initialDuties,
     audit: [
-      { at: '2026-11-08 17:02', by: 'Ms. Reshma George (HR)', action: 'Verified documents for Ms. Priya Ramesh (onboarding)' },
-      { at: '2026-11-08 11:15', by: 'Mr. Joseph Mathew (Finance)', action: 'Viewed salary register, September 2026' },
-      { at: '2026-11-07 09:30', by: 'Mr. Nikhil Das (Admin)', action: 'Added leave type "Duty Leave"' },
+      { at: '2026-11-08 17:02', by: 'HR office (sample entry)', action: 'Verified documents for Ms. Priya Ramesh (onboarding)' },
+      { at: '2026-11-08 11:15', by: 'Finance office (sample entry)', action: 'Viewed salary register, September 2026' },
+      { at: '2026-11-07 09:30', by: 'System administrator (sample entry)', action: 'Added leave type "Duty Leave"' },
     ],
     roleHolders: mock.personaEmployee,
   }
@@ -336,4 +336,4 @@ export const inr = (n: number) => `₹${n.toLocaleString('en-IN')}`
 export const monthName = (m: string) =>
   new Date(`${m}-01T00:00:00`).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
 export const fmtDate = (d: string) =>
-  new Date(`${d}T00:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+  !d ? '—' : new Date(`${d}T00:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })

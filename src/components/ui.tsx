@@ -11,7 +11,7 @@ export function Icon({ name, size = 18 }: { name: string; size?: number }) {
 
 export function initials(name: string) {
   return name
-    .replace(/^(Dr\.|Mr\.|Ms\.|Fr\.)\s/, '')
+    .replace(/^((Prof|Dr|Mr|Ms|Fr|Sr)\.\s)+/, '')
     .split(' ')
     .map((x) => x[0])
     .slice(0, 2)
@@ -78,6 +78,7 @@ const statusClass: Record<string, string> = {
   Returned: 'b-red',
   Absent: 'b-red',
   Leave: 'b-blue',
+  Hidden: 'b-grey',
 }
 
 export function Badge({ children }: { children: Status | string }) {

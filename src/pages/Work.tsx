@@ -6,7 +6,7 @@ import { canSee, roleTitle, scopeEmployees } from '../data/roles'
 import { leaveBalancesFor, punchesFor } from '../data/mock'
 import { completeness, queueFor } from '../lib'
 import { Avatar, Badge, Bar, Card, Locked, Modal, Notice, PageHead, Stat, downloadText, toCsv } from '../components/ui'
-import { SlipView } from './SelfService'
+import { RealNotice, SlipView } from './SelfService'
 
 /* ---------------- Approvals ---------------- */
 export function Approvals() {
@@ -186,8 +186,14 @@ export function People() {
                     <td>{canSee(s.role!, 'attendance') === true ? <Badge>{d.status}</Badge> : <span className="muted small">—</span>}</td>
                     {showIqac && (
                       <td style={{ minWidth: 140 }}>
-                        <div className="small">{c}%</div>
-                        <Bar value={c} />
+                        {e.real ? (
+                          <span className="small muted">Leadership</span>
+                        ) : (
+                          <>
+                            <div className="small">{c}%</div>
+                            <Bar value={c} />
+                          </>
+                        )}
                       </td>
                     )}
                     <td>
@@ -214,6 +220,17 @@ export function PersonDetail() {
   const [revealed, setRevealed] = useState(false)
   const [slip, setSlip] = useState(false)
   if (!e) return <Notice tone="amber">This record is outside what your role can see.</Notice>
+  if (e.real)
+    return (
+      <>
+        <PageHead eyebrow={`Viewing as ${roleTitle(s.role!)}`} title={e.name} sub={e.designation}>
+          <Link className="btn" to="/people">
+            ← Back
+          </Link>
+        </PageHead>
+        <RealNotice />
+      </>
+    )
   const r = s.role!
   const sal = canSee(r, 'salary')
   const idv = canSee(r, 'identity')

@@ -44,7 +44,8 @@ export default function Login() {
         </button>
         <p className="small muted">
           In this demo the Google button signs you in as an employee. Use the panel on the right to try any other role.
-          All people and figures are sample data.
+          Leadership names and titles are from rajagiri.edu; no personal data is simulated for them. All other people
+          and all figures are sample data.
         </p>
       </div>
       <div className="login-right">

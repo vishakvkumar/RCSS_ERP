@@ -4,8 +4,28 @@ A clickable demo of the employee ERP proposed for **Rajagiri College of Social S
 It shows how one platform gives every employee a self-service login and gives HR, Finance, IQAC, the Research
 pillar and leadership role-based access to the same, single employee record.
 
-> **Demo only.** All people, salaries, punches and publications are fictional sample data. Nothing is sent to a
-> server: the demo keeps its state in the browser (`localStorage`). Use the reset button in the top bar to start over.
+> **Demo only.** Nothing is sent to a server: the demo keeps its state in the browser (`localStorage`). Use the
+> reset button in the top bar to start over.
+
+### About the names
+
+The leadership logins use the names and titles listed on the college's
+[committees page](https://rajagiri.edu/about-committees):
+
+| Demo role | Name | Title on rajagiri.edu |
+| --- | --- | --- |
+| Director / Principal | Prof. Fr. Saju M.D., CMI | Principal; Chairperson, IQAC |
+| Dean | Dr. Bindiya M. Varghese | Dean, Computer Science |
+| HR | Dr. Manoj Mathew | Associate Dean, Human Resource Development |
+| IQAC Coordinator | Prof. Binoy Joseph | Associate Director; IQAC Coordinator |
+| Research Pillar Head | Dr. Alphonsa Vijaya Joseph | Director, RRDC; Head, Biosciences |
+| Admission Pillar Head | Dr. Veeva Mathew | Director, Admissions |
+| System Administrator | Dr. Shiju Thomas M.Y. | Convenor, IT Committee |
+
+**No personal data is simulated for these people**: no salary, attendance, leave, ID, contact or research
+records. Their own pages say so. The Head of Department, Finance and Employee logins, and every other staff member,
+are fictional, as are all salaries, punches, leave and publications. The HR and System Administrator mappings
+are the closest titles found on the site and should be confirmed with the college.
 
 ## Run it
 

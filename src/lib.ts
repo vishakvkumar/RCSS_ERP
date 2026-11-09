@@ -18,7 +18,9 @@ export function queueFor(role: RoleId, scoped: Employee[], requests: RequestItem
 
 /** How complete and verified an employee's accreditation-relevant data is (0–100). */
 export function completeness(e: Employee, pubs: Publication[]) {
+  if (e.real) return 0
   if (e.category === 'Non-teaching') {
+    if (!e.documents.length) return 0
     const docs = e.documents.filter((d) => d.status === 'Approved').length / e.documents.length
     return Math.round(docs * 100)
   }
@@ -36,7 +38,7 @@ export function completeness(e: Employee, pubs: Publication[]) {
 export function deptReadiness(depts: Department[], emps: Employee[], pubs: Publication[]) {
   return depts
     .map((d) => {
-      const staff = emps.filter((e) => e.departmentId === d.id && e.category === 'Teaching')
+      const staff = emps.filter((e) => e.departmentId === d.id && e.category === 'Teaching' && !e.real)
       const score = staff.length ? Math.round(staff.reduce((a, e) => a + completeness(e, pubs), 0) / staff.length) : 0
       return { dept: d, staff: staff.length, score }
     })
@@ -49,6 +51,7 @@ export function todaySummary(emps: Employee[]) {
   let late = 0
   let leave = 0
   let lateMinutes = 0
+  emps = emps.filter((e) => !e.real)
   for (const e of emps) {
     const days = punchesFor(e.id)
     const t = days[days.length - 1]

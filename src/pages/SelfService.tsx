@@ -5,6 +5,21 @@ import { leaveBalancesFor, punchesFor, holidays, computeIncentive } from '../dat
 import type { AuthorRole, Certification, Payslip, RequestItem, ScopusQuartile } from '../data/types'
 import { Badge, Bar, Card, Modal, Notice, PageHead, Stat, Steps, downloadText } from '../components/ui'
 import { completeness, pubStages } from '../lib'
+import { leadershipSource } from '../data/mock'
+
+/** Shown wherever a real, named person's personal data would otherwise appear. */
+export function RealNotice() {
+  return (
+    <Notice>
+      This name and title are taken from the college website (
+      <a href={leadershipSource} target="_blank" rel="noreferrer">
+        rajagiri.edu
+      </a>
+      ). The demo does not simulate salary, attendance, leave, ID or research records for named people. In the live
+      system this page shows their own verified record.
+    </Notice>
+  )
+}
 
 /* ---------------- Profile ---------------- */
 export function MyProfile() {
@@ -19,8 +34,17 @@ export function MyProfile() {
   const dept = s.departments.find((d) => d.id === e.departmentId)
   const score = completeness(e, s.publications)
 
+  if (e.real)
+    return (
+      <>
+        <PageHead eyebrow="Self-service" title="My profile" sub={e.designation} />
+        <RealNotice />
+      </>
+    )
+
   return (
     <>
+      {me!.real && <RealNotice />}
       <PageHead eyebrow="Self-service" title="My profile" sub={`${e.designation} · ${dept?.name} · ${e.id}`}>
         <button className="btn primary" onClick={() => setAdd(true)}>
           <Plus /> Add certificate or FDP
@@ -258,8 +282,17 @@ export function MyAttendance() {
   const first = new Date(`${days[0].date}T00:00:00`).getDay()
   const days_ = form.from && form.to ? Math.max(1, (Date.parse(form.to) - Date.parse(form.from)) / 864e5 + 1) : 0
 
+  if (me!.real)
+    return (
+      <>
+        <PageHead eyebrow="Self-service · from R Punch" title="Attendance and leave" />
+        <RealNotice />
+      </>
+    )
+
   return (
     <>
+      {me!.real && <RealNotice />}
       <PageHead eyebrow="Self-service · from R Punch" title="Attendance and leave" sub="Punch data is read from R Punch through its API. Nothing to enter twice.">
         <button className="btn primary" onClick={() => setApply(true)}>
           <Plus /> Apply for leave
@@ -444,6 +477,7 @@ export function MyPayslips() {
   const year = slips.reduce((a, p) => a + p.basic + p.allowances, 0)
   return (
     <>
+      {me!.real && <RealNotice />}
       <PageHead eyebrow="Self-service" title="Payslips and Form 16" sub="Published by Finance. Download any month, any time." />
       <div className="grid g3">
         <Stat label="Gross pay, last 6 months" value={inr(year)} />
@@ -517,6 +551,7 @@ export function MyResearch() {
 
   return (
     <>
+      {me!.real && <RealNotice />}
       <PageHead eyebrow="Self-service · Research" title="My research" sub="Add a paper once. It counts for your incentive, appraisal and IQAC data.">
         <button className="btn primary" onClick={() => setAdd(true)}>
           <Plus /> Add a publication

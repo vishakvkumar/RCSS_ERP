@@ -1,4 +1,7 @@
-// All names, numbers and records in this file are fictional sample data for the demo.
+// Sample data for the demo.
+// Leadership names and titles are taken from the RCSS committees page (https://rajagiri.edu/about-committees).
+// No personal data (salary, attendance, leave, ID, research) is simulated for them.
+// Every other person and every number in this file is fictional.
 import type {
   AdmissionDuty,
   Campus,
@@ -37,7 +40,7 @@ export const campuses: Campus[] = [
 export const schools: School[] = [
   { id: 'sss', name: 'School of Social Sciences' },
   { id: 'scm', name: 'School of Commerce and Management' },
-  { id: 'sci', name: 'School of Computing and Information' },
+  { id: 'sci', name: 'School of Sciences and Computing' },
 ]
 
 export const departments: Department[] = [
@@ -49,6 +52,7 @@ export const departments: Department[] = [
   { id: 'cs', name: 'Computer Science', schoolId: 'sci', campusId: 'hill' },
   { id: 'lis', name: 'Library and Information Science', schoolId: 'sci', campusId: 'hill' },
   { id: 'stat', name: 'Statistics', schoolId: 'sci', campusId: 'hill' },
+  { id: 'bio', name: 'Biosciences', schoolId: 'sci', campusId: 'hill' },
   { id: 'admin', name: 'Administration', schoolId: 'sss', campusId: 'hill' },
 ]
 
@@ -65,18 +69,20 @@ export const designations = [
 
 export const leaveTypes = ['Casual Leave', 'Earned Leave', 'Medical Leave', 'Duty Leave']
 
-const people: [string, string, string, Employee['category'], string?][] = [
-  // name, department, designation, category, persona role
-  ['Dr. Meera Varghese', 'sw', 'Professor', 'Teaching', 'principal'],
-  ['Dr. Thomas Kurian', 'com', 'Professor', 'Teaching', 'dean'],
+export const leadershipSource = 'https://rajagiri.edu/about-committees'
+
+const people: [string, string, string, Employee['category'], string?, boolean?][] = [
+  // name, department, designation, category, persona role, real person (from rajagiri.edu)
+  ['Prof. Fr. Saju M.D., CMI', 'admin', 'Principal; Chairperson, IQAC', 'Teaching', 'principal', true],
+  ['Dr. Bindiya M. Varghese', 'cs', 'Dean, Computer Science', 'Teaching', 'dean', true],
   ['Dr. Anjali Nair', 'cs', 'Associate Professor', 'Teaching', 'hod'],
-  ['Ms. Reshma George', 'admin', 'Office Superintendent', 'Non-teaching', 'hr'],
+  ['Dr. Manoj Mathew', 'admin', 'Associate Dean, Human Resource Development', 'Teaching', 'hr', true],
   ['Mr. Joseph Mathew', 'admin', 'Accountant', 'Non-teaching', 'finance'],
-  ['Dr. Lakshmi Menon', 'psy', 'Associate Professor', 'Teaching', 'iqac'],
-  ['Dr. Arun Pillai', 'stat', 'Professor', 'Teaching', 'research'],
-  ['Dr. Sneha Joseph', 'pm', 'Associate Professor', 'Teaching', 'admission'],
+  ['Prof. Binoy Joseph', 'admin', 'Associate Director; IQAC Coordinator', 'Teaching', 'iqac', true],
+  ['Dr. Alphonsa Vijaya Joseph', 'bio', 'Director, RRDC; Head, Biosciences', 'Teaching', 'research', true],
+  ['Dr. Veeva Mathew', 'admin', 'Director, Admissions', 'Teaching', 'admission', true],
   ['Mr. Vivek Raj', 'cs', 'Assistant Professor', 'Teaching', 'employee'],
-  ['Mr. Nikhil Das', 'admin', 'Clerk', 'Non-teaching', 'admin'],
+  ['Dr. Shiju Thomas M.Y.', 'admin', 'Convenor, IT Committee', 'Teaching', 'admin', true],
   ['Dr. Fathima Rasheed', 'cs', 'Assistant Professor', 'Teaching'],
   ['Mr. Rahul Krishnan', 'cs', 'Assistant Professor', 'Teaching'],
   ['Ms. Divya Suresh', 'cs', 'Lab Assistant', 'Non-teaching'],
@@ -114,10 +120,39 @@ function isoDate(d: Date) {
 
 export const personaEmployee: Record<RoleId, string> = {} as Record<RoleId, string>
 
-export const employees: Employee[] = people.map(([name, dept, desig, cat, persona], i) => {
+function realPerson(id: string, name: string, dept: string, desig: string, cat: Employee['category']): Employee {
+  return {
+    id,
+    name,
+    email: '',
+    designation: desig,
+    category: cat,
+    departmentId: dept,
+    campusId: 'hill',
+    joined: '',
+    phone: '',
+    dob: '',
+    address: '',
+    bank: { account: '', ifsc: '', bankName: '' },
+    pan: '',
+    aadhaar: '',
+    basicPay: 0,
+    allowances: 0,
+    qualifications: [],
+    certifications: [],
+    documents: [],
+    service: [{ date: '', event: `${desig} (as listed on rajagiri.edu)` }],
+    admissionDuty: false,
+    retires: '2099-12-31',
+    real: true,
+  }
+}
+
+export const employees: Employee[] = people.map(([name, dept, desig, cat, persona, real], i) => {
   const r = seeded(1000 + i * 37)
   const id = `RCSS${String(1001 + i)}`
   if (persona) personaEmployee[persona as RoleId] = id
+  if (real) return realPerson(id, name, dept, desig, cat)
   const joinYear = 2000 + Math.floor(r() * 23)
   const first = name.replace(/^(Dr\.|Mr\.|Ms\.)\s/, '').split(' ')[0].toLowerCase()
   const certs: Certification[] = [
@@ -204,6 +239,7 @@ export const holidays: Holiday[] = [
 export function punchesFor(employeeId: string): PunchDay[] {
   const idx = employees.findIndex((e) => e.id === employeeId)
   const r = seeded(5000 + idx * 91)
+  const hidden = employees[idx]?.real
   const out: PunchDay[] = []
   const today = new Date()
   for (let k = 29; k >= 0; k--) {
@@ -217,6 +253,10 @@ export function punchesFor(employeeId: string): PunchDay[] {
     }
     if (holidays.some((h) => h.date === date)) {
       out.push({ date, in: null, out: null, lateMinutes: 0, status: 'Holiday' })
+      continue
+    }
+    if (hidden) {
+      out.push({ date, in: null, out: null, lateMinutes: 0, status: 'Hidden' })
       continue
     }
     const x = r()
@@ -241,7 +281,8 @@ export function punchesFor(employeeId: string): PunchDay[] {
 
 export function leaveBalancesFor(employeeId: string): LeaveBalance[] {
   const idx = employees.findIndex((e) => e.id === employeeId)
-  const r = seeded(7000 + idx)
+  const r0 = seeded(7000 + idx)
+  const r = employees[idx]?.real ? () => 0 : r0
   return [
     { type: 'Casual Leave', total: 15, used: Math.floor(r() * 10) },
     { type: 'Earned Leave', total: 30, used: Math.floor(r() * 12) },
@@ -252,7 +293,7 @@ export function leaveBalancesFor(employeeId: string): LeaveBalance[] {
 
 const months = ['2026-10', '2026-09', '2026-08', '2026-07', '2026-06', '2026-05']
 
-export const payslips: Payslip[] = employees.flatMap((e) =>
+export const payslips: Payslip[] = employees.filter((e) => !e.real).flatMap((e) =>
   months.map((m, i) => {
     const pf = Math.round(Math.min(e.basicPay, 15000) * 0.12)
     const tds = Math.round((e.basicPay + e.allowances) * (e.basicPay > 100000 ? 0.12 : e.basicPay > 50000 ? 0.05 : 0))
@@ -290,13 +331,13 @@ const pubSeed: [string, string, string, Publication['quartile'], Publication['au
   ['RCSS1003', 'Graph neural networks for course recommendation', 'Expert Systems with Applications', 'Q1', 'First / corresponding author', 'Paid'],
   ['RCSS1011', 'Malayalam sentiment analysis with transformer models', 'Language Resources and Evaluation', 'Q2', 'First / corresponding author', 'HoD verified'],
   ['RCSS1014', 'Community mental health outreach in coastal Kerala', 'Indian Journal of Social Work', 'Q3', 'First / corresponding author', 'Paid'],
-  ['RCSS1006', 'Workplace resilience among health workers after the floods', 'Asian Journal of Psychiatry', 'Q1', 'First / corresponding author', 'Research approved'],
+  ['RCSS1016', 'Workplace resilience among health workers after the floods', 'Asian Journal of Psychiatry', 'Q1', 'First / corresponding author', 'Research approved'],
   ['RCSS1016', 'Adolescent screen time and wellbeing', 'Journal of Adolescence', 'Q1', 'Co-author', 'Submitted'],
   ['RCSS1018', 'Microfinance and women entrepreneurs in Ernakulam', 'Journal of Small Business Management', 'Q2', 'First / corresponding author', 'Paid'],
-  ['RCSS1007', 'Small-area estimation of household income in Kerala', 'Statistics and Applications', 'Q3', 'First / corresponding author', 'Paid'],
+  ['RCSS1022', 'Small-area estimation of household income in Kerala', 'Statistics and Applications', 'Q3', 'First / corresponding author', 'Paid'],
   ['RCSS1022', 'Bayesian methods for crop yield forecasting', 'Journal of Applied Statistics', 'Q2', 'Co-author', 'HoD verified'],
   ['RCSS1020', 'Open-access adoption in Kerala college libraries', 'Library Hi Tech', 'Q1', 'First / corresponding author', 'Submitted'],
-  ['RCSS1002', 'GST compliance costs for MSMEs', 'Indian Journal of Finance', 'Q4', 'First / corresponding author', 'Paid'],
+  ['RCSS1017', 'GST compliance costs for MSMEs', 'Indian Journal of Finance', 'Q4', 'First / corresponding author', 'Paid'],
   ['RCSS1019', 'Gig workers and labour law in India', 'Indian Journal of Industrial Relations', 'Q3', 'First / corresponding author', 'Research approved'],
 ]
 
@@ -317,7 +358,7 @@ export const publications: Publication[] = pubSeed.map(([emp, title, journal, q,
 export const projects: FundedProject[] = [
   { id: 'PRJ1', employeeId: 'RCSS1014', title: 'Psychosocial support model for disaster-affected families', agency: 'ICSSR', amount: 1200000, start: '2025-04-01', end: '2027-03-31', status: 'Ongoing' },
   { id: 'PRJ2', employeeId: 'RCSS1003', title: 'AI-assisted early warning for student dropout', agency: 'KSCSTE', amount: 850000, start: '2024-08-01', end: '2026-07-31', status: 'Completed' },
-  { id: 'PRJ3', employeeId: 'RCSS1007', title: 'Rural household consumption survey methods', agency: 'DST', amount: 1550000, start: '2025-10-01', end: '2028-09-30', status: 'Ongoing' },
+  { id: 'PRJ3', employeeId: 'RCSS1022', title: 'Rural household consumption survey methods', agency: 'DST', amount: 1550000, start: '2025-10-01', end: '2028-09-30', status: 'Ongoing' },
   { id: 'PRJ4', employeeId: 'RCSS1018', title: 'Women-led enterprises in the coastal economy', agency: 'ICSSR', amount: 600000, start: '2026-01-15', end: '2027-01-14', status: 'Ongoing' },
 ]
 
@@ -387,8 +428,8 @@ export const initialCandidates: Candidate[] = [
 ]
 
 export const initialDuties: AdmissionDuty[] = [
-  { id: 'AD1', employeeId: 'RCSS1008', date: '2026-11-21', task: 'MSW spot admission panel', venue: 'Seminar Hall 1' },
-  { id: 'AD2', employeeId: 'RCSS1002', date: '2026-11-21', task: 'Document verification desk', venue: 'Admission Office' },
+  { id: 'AD1', employeeId: 'RCSS1022', date: '2026-11-21', task: 'MSW spot admission panel', venue: 'Seminar Hall 1' },
+  { id: 'AD2', employeeId: 'RCSS1018', date: '2026-11-21', task: 'Document verification desk', venue: 'Admission Office' },
   { id: 'AD3', employeeId: 'RCSS1014', date: '2026-11-22', task: 'Group discussion moderator', venue: 'Room 204' },
 ]
 

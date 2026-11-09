@@ -202,7 +202,7 @@ export function ResearchPolicy() {
 /* ---------------- IQAC ---------------- */
 export function Iqac() {
   const { s } = useStore()
-  const teaching = s.employees.filter((e) => e.category === 'Teaching')
+  const teaching = s.employees.filter((e) => e.category === 'Teaching' && !e.real)
   const readiness = deptReadiness(s.departments, s.employees, s.publications)
   const gaps = teaching
     .map((e) => ({ e, c: completeness(e, s.publications) }))
@@ -301,7 +301,7 @@ export function Iqac() {
 /* ---------------- Admission ---------------- */
 export function Admission() {
   const { s, emp, actions } = useStore()
-  const staff = s.employees.filter((e) => e.admissionDuty)
+  const staff = s.employees.filter((e) => e.admissionDuty && !e.real)
   const [add, setAdd] = useState(false)
   const [f, setF] = useState({ employeeId: staff[0]?.id ?? '', date: '', task: '', venue: '' })
   return (

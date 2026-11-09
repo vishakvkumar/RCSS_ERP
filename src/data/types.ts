@@ -84,6 +84,8 @@ export interface Employee {
   admissionDuty: boolean
   probationEnds?: string
   retires: string
+  /** A real person named on rajagiri.edu: their personal data is never simulated. */
+  real?: boolean
 }
 
 export interface PunchDay {
@@ -91,7 +93,7 @@ export interface PunchDay {
   in: string | null
   out: string | null
   lateMinutes: number
-  status: 'Present' | 'Late' | 'Leave' | 'Absent' | 'Holiday' | 'Weekend'
+  status: 'Present' | 'Late' | 'Leave' | 'Absent' | 'Holiday' | 'Weekend' | 'Hidden'
 }
 
 export interface LeaveBalance {
