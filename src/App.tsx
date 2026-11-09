@@ -7,7 +7,8 @@ import { MyAttendance, MyPayslips, MyProfile, MyRequests, MyResearch } from './p
 import { Approvals, Onboarding, Payouts, Payroll, People, PersonDetail, Verify } from './pages/Work'
 import { Access, Admission, AdminAudit, AdminMaster, AdminRoles, Iqac, ResearchClaims, ResearchPolicy, ResearchProjects } from './pages/Pillars'
 import type { RoleId } from './data/types'
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
+import { setStatusBarForSignedIn } from './native'
 
 function Only({ roles, children }: { roles: RoleId[]; children: ReactNode }) {
   const { s } = useStore()
@@ -16,6 +17,9 @@ function Only({ roles, children }: { roles: RoleId[]; children: ReactNode }) {
 
 function Routed() {
   const { s } = useStore()
+  useEffect(() => {
+    setStatusBarForSignedIn(!!s.role)
+  }, [s.role])
   if (!s.role) return <Login />
   return (
     <Layout>

@@ -38,6 +38,33 @@ npm run preview    # serve the build locally
 
 Requires Node 18+.
 
+## iOS and Android apps
+
+The same code runs as a native app on **iOS and Android** (via [Capacitor](https://capacitorjs.com)) and as an
+**installable web app** on any phone. On phones it switches to an app layout: a bottom tab bar with each role's main
+screens, a slide-out menu, bottom-sheet forms and safe-area support for notches and home indicators.
+
+| Platform | How to get it |
+| --- | --- |
+| Android | Every push to `main` builds a debug APK. Open **Actions → Build mobile apps → latest run → Artifacts → `rcss-portal-android-debug`**, unzip, copy `app-debug.apk` to the phone and install it (allow "install unknown apps"). |
+| iOS | The same workflow compiles the iOS app for the simulator (`rcss-portal-ios-simulator`). To run on an iPhone, open the project in Xcode on a Mac (below) and sign it with an Apple Developer account. |
+| Any phone, no install | Open the GitHub Pages link in Safari or Chrome and choose **Add to Home Screen**. It opens full-screen, with the RCSS icon, and works offline. |
+
+### Build the native apps locally
+
+```bash
+npm install
+npm run android   # builds the web app, syncs it into android/, opens Android Studio
+npm run ios       # same for ios/, opens Xcode (macOS only; run `cd ios/App && pod install` once)
+```
+
+Requirements: Android Studio (JDK 17, Android SDK 34) for Android; Xcode 15+ and CocoaPods for iOS.
+App ID: `edu.rajagiri.epde.demo` · App name: **RCSS Portal**. Icons and splash screens come from `assets/`
+(regenerate with `npm run assets`).
+
+For the Play Store and App Store you will need release signing (an Android keystore, an Apple Developer account),
+store listings and a privacy policy. These are not set up in this demo.
+
 ### Publish on GitHub Pages
 
 The workflow in `.github/workflows/deploy.yml` builds and deploys on every push to `main`.
@@ -89,6 +116,9 @@ Switch roles any time from **Viewing as** in the top bar.
 ## Project structure
 
 ```
+android/          Native Android project (Capacitor)
+ios/              Native iOS project (Capacitor)
+assets/           Source icon and splash images for the native apps
 src/
   data/
     types.ts      Data model (employees, punches, payslips, publications, requests …)
@@ -96,7 +126,8 @@ src/
     roles.ts      Roles, navigation, data scoping and the access matrix
   store.tsx       App state and actions (approvals, claims, publishing, admin changes, audit log)
   lib.ts          Approval queues, IQAC completeness and readiness scores
-  components/     Layout (sidebar, role switcher) and shared UI
+  components/     Layout (sidebar, phone tab bar, role switcher) and shared UI
+  native.ts       Status bar, splash screen and offline support per platform
   pages/
     Login.tsx
     Dashboard.tsx     One dashboard per role
@@ -105,7 +136,7 @@ src/
     Pillars.tsx       Research, IQAC, admission, admin, access matrix
 ```
 
-Built with React 18, TypeScript, Vite and React Router (hash routing, so it runs from any static host).
+Built with React 18, TypeScript, Vite, React Router (hash routing, so it runs from any static host) and Capacitor 6 for iOS and Android.
 
 ## Open items from the college
 
